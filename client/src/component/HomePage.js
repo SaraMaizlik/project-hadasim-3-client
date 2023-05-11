@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { sendMemberToServer } from "../Axios/accessServer";
+import { isValid } from './ValidationTests.js';
+
+const today = new Date().toISOString().substring(0, 10);
 
 const LoginForm = () => {
 
@@ -7,24 +10,24 @@ const LoginForm = () => {
         firstName: '',
         lastName: '',
         personalID: '',
-        birthDate: new Date().toISOString().substring(0, 10),
+        birthDate: today,
         phone: '',
         cellPhone: '',
-        positiveDate: new Date().toISOString().substring(0, 10),
-        recoveryDate: new Date().toISOString().substring(0, 10),
+        positiveDate: today,
+        recoveryDate: today,
     });
 
     const [address, setAddress] = React.useState({
         city: '',
         street: '',
-        houseNumber: 0,
+        houseNumber: 1,
     });
 
     const [vaccine, setVaccine] = React.useState({
-        receivingDate1: new Date().toISOString().substring(0, 10),
-        receivingDate2: new Date().toISOString().substring(0, 10),
-        receivingDate3: new Date().toISOString().substring(0, 10),
-        receivingDate4: new Date().toISOString().substring(0, 10),
+        receivingDate1: today,
+        receivingDate2: today,
+        receivingDate3: today,
+        receivingDate4: today,
     });
 
     const [manufacturer, setManufacturer] = React.useState({
@@ -64,17 +67,22 @@ const LoginForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // שליחה לפונקציה ששולחת למסד
-        let res = await sendMemberToServer({
-            member, address, vaccine, manufacturer
-        })
-        console.log(res);
+        if (isValid({ member, address, vaccine, manufacturer })) {
+            
+            // שליחה לפונקציה ששולחת למסד
+            let res = await sendMemberToServer({
+                member, address, vaccine, manufacturer
+            })
+            console.log(res);
+        }
+        else
+            alert("יש למלא את כל השדות המסומנים בכוכבית ולוודא שכל הנתונים תקינים")       
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                <label htmlFor="firstName">שם פרטי</label>
+                <label htmlFor="firstName">שם פרטי*</label>
                 <input
                     id="firstName"
                     name="member"
@@ -84,7 +92,7 @@ const LoginForm = () => {
                 />
             </div>
             <div>
-                <label htmlFor="lastName">שם משפחה</label>
+                <label htmlFor="lastName">שם משפחה*</label>
                 <input
                     id="lastName"
                     name="member"
@@ -94,7 +102,7 @@ const LoginForm = () => {
                 />
             </div>
             <div>
-                <label htmlFor="personalID">תעודת זהות</label>
+                <label htmlFor="personalID">תעודת זהות*</label>
                 <input
                     id="personalID"
                     name="member"
@@ -104,7 +112,7 @@ const LoginForm = () => {
                 />
             </div>
             <div>
-                <label htmlFor="birthDate">תאריך לידה</label>
+                <label htmlFor="birthDate">תאריך לידה*</label>
                 <input
                     id="birthDate"
                     name="member"
@@ -114,7 +122,7 @@ const LoginForm = () => {
                 />
             </div>
             <div>
-                <label htmlFor="phone">טלפון</label>
+                <label htmlFor="phone">טלפון*</label>
                 <input
                     id="phone"
                     name="member"
@@ -124,7 +132,7 @@ const LoginForm = () => {
                 />
             </div>
             <div>
-                <label htmlFor="cellPhone">טלפון נייד</label>
+                <label htmlFor="cellPhone">טלפון נייד*</label>
                 <input
                     id="cellPhone"
                     name="member"
@@ -134,7 +142,7 @@ const LoginForm = () => {
                 />
             </div>
             <div>
-                <label htmlFor="city">עיר מגורים</label>
+                <label htmlFor="city">עיר מגורים*</label>
                 <input
                     id="city"
                     name="address"
@@ -144,7 +152,7 @@ const LoginForm = () => {
                 />
             </div>
             <div>
-                <label htmlFor="street">רחוב</label>
+                <label htmlFor="street">רחוב*</label>
                 <input
                     id="street"
                     name="address"
@@ -154,7 +162,7 @@ const LoginForm = () => {
                 />
             </div>
             <div >
-                <label htmlFor="houseNumber">מספר בית</label>
+                <label htmlFor="houseNumber">מספר בית*</label>
                 <input
                     id="houseNumber"
                     name="address"
@@ -265,7 +273,7 @@ const LoginForm = () => {
                 />
             </div>
 
-            <button type="submit">Submit</button>
+            <button type="submit">שמירה</button>
         </form>
     );
 };
